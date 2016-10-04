@@ -6,6 +6,7 @@ exports.up = function(knex, Promise) {
     table.string('name');
     table.string('setting_description');
     table.string('misc_loot');
+    table.bool('active');
     table.timestamps();
   })
 };

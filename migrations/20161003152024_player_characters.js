@@ -19,6 +19,7 @@ exports.up = function(knex, Promise) {
     table.integer('current_hit_points');
     table.integer('initiative');
     table.string('current_effects');
+    table.bool('active');
 
     table.timestamps();
   })

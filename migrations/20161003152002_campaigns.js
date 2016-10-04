@@ -4,6 +4,7 @@ exports.up = function(knex, Promise) {
     table.increments('id');
     table.integer('user_id');
     table.string('name');
+    table.bool('active');
     table.timestamps();
   })
 };

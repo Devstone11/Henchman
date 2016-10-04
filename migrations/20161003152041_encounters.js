@@ -5,6 +5,7 @@ exports.up = function(knex, Promise) {
     table.integer('campaign_id');
     table.string('name');
     table.timestamps();
+    table.bool('active');
   })
 };
 

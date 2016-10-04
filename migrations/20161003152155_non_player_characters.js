@@ -10,6 +10,7 @@ exports.up = function(knex, Promise) {
     table.string('npc_notes');
     table.string('current_effects');
     table.string('loot');
+    table.bool('active');
 
     table.timestamps();
   })
