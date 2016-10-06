@@ -7,7 +7,7 @@ module.exports = {
       id: DEFAULT,
       email: email
     })
-  }
+  },
   createCampaign: function(user_id, name) {
     return knex('campaigns').insert({
       id: DEFAULT,
@@ -134,5 +134,10 @@ module.exports = {
       obstacle_notes,
       active: true
     })
+  },
+
+  //'READ' Queries
+  getUsers: function() {
+      return knex.select('id', 'email').from('users')
   }
 }
