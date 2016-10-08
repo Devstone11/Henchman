@@ -138,6 +138,91 @@ module.exports = {
 
   //'READ' Queries
   getUsers: function() {
-      return knex.select('id', 'email').from('users')
+    return knex.select('id', 'email').from('users');
+  },
+  getCampaigns: function(user_id) {
+    return knex('campaigns').where({user_id: user_id}).select('id', 'name', 'active');
+  },
+  getEncounters: function(campaign_id) {
+    return knex('encounters').where({campaign_id: campaign_id}).select('id', 'name', 'active');
+  },
+  getScenes: function(encounter_id) {
+    return knex('scenes').where({encounter_id: encounter_id}).select('id', 'name', 'setting_description', 'misc_loot', 'active');
+  },
+  getObstacles: function(scene_id) {
+    return knex('obstacles').where({scene_id: scene_id});
+  },
+  getPlayers: function(campaign_id) {
+    return knex('player_characters').where({campaign_id: campaign_id, active: true});
+  },
+  getNPCs: function(scene_id) {
+    //get race info with each npc
+    return knex.raw(
+      `SELECT
+      non_player_characters.id AS npc_id,
+      non_player_characters.scene_id AS scene_id,
+      non_player_characters.race_id AS race_id,
+      non_player_characters.name AS npc_name,
+      non_player_characters.current_hit_points AS current_hit_points,
+      non_player_characters.initiative AS initiative,
+      non_player_characters.npc_notes AS npc_notes,
+      non_player_characters.current_effects AS current_effects,
+      non_player_characters.loot AS loot,
+      non_player_characters.active AS npc_active,
+      races.name AS race_name,
+      races.max_hit_points AS max_hit_points,
+      races.armor_class AS armor_class,
+      races.xp_value AS xp_value,
+      races.fortitude AS fortitude,
+      races.reflex AS reflex,
+      races.will AS will,
+      races.speed AS speed,
+      races.race_notes AS race_notes
+      from non_player_characters
+      LEFT JOIN races
+      on non_player_characters.race_id = races.id
+      WHERE scene_id = ${scene_id};`);
+    },
+  getRaceAbilities: function(race_id) {
+    return knex.raw(
+      `SELECT
+      race_abilities.id AS race_abilities_id,
+      race_abilities.race_id AS race_id,
+      race_abilities.ability_id AS ability_id,
+      abilities.name AS ability_name,
+      abilities.type AS ability_type,
+      abilities.range AS ability_range,
+      abilities.attack_roll AS attack_roll,
+      abilities.damage_roll AS damage_roll,
+      abilities.ability_notes AS ability_notes
+      FROM race_abilities
+      LEFT JOIN abilities
+      ON abilities.id = race_abilities.ability_id
+      WHERE race_id = 2`);
+  },
+  getItems: function(npc_id) {
+    return knex.raw(
+      `SELECT
+      item_abilities.id AS item_ability_id,
+      item_abilities.item_id AS item_id,
+      item_abilities.ability_id AS ability_id,
+      items.npc_id AS npc_id,
+      items.name AS item_name,
+      items.item_notes AS item_notes,
+      items.enhancement_amount AS enhancement_amount,
+      items.enhancement_target AS enhancement_target,
+      abilities.name AS ability_name,
+      abilities.type AS type,
+      abilities.range AS range,
+      abilities.attack_roll AS attack_roll,
+      abilities.damage_roll AS damage_roll,
+      abilities.ability_notes AS ability_notes
+      from item_abilities
+      JOIN items
+      ON items.id = item_abilities.item_id
+      JOIN abilities
+      ON abilities.id = item_abilities.ability_id
+      WHERE items.npc_id = ${npc_id}`);
   }
+
 }
