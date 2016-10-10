@@ -8,6 +8,7 @@ exports.seed = function(knex, Promise) {
     knex('abilities').insert({id: 5, name: 'Minotaur Battleaxe', type: 'standard', range: 'close', attack_roll: '+16', attack_vs: 'AC', damage_roll: '1d10+6', ability_notes: 'Target is marked until end of Minotaur\'s next turn.'}),
     knex('abilities').insert({id: 6, name: 'Goring Charge', type: 'charge', range: 'close', attack_roll: '+17', attack_vs: 'AC', damage_roll: '1d6+6', ability_notes: 'Target knocked prone.'}),
     knex('abilities').insert({id: 7, name: 'Speed of Dead', type: 'at-will', range: 'close', attack_roll: '+2', attack_vs: 'AC', damage_roll: '1d6', ability_notes: 'When making opportunity attack, +2 to attack and +1d6 to damage.'}),
-    knex('abilities').insert({id: 8, name: 'Skeleton Longsword', type: 'standard', range: 'close', attack_roll: '+5', attack_vs: 'AC', damage_roll: '1d8+2', ability_notes: ''})
+    knex('abilities').insert({id: 8, name: 'Skeleton Longsword', type: 'standard', range: 'close', attack_roll: '+5', attack_vs: 'AC', damage_roll: '1d8+2', ability_notes: ''}),
+    knex('abilities').insert({id: 9, name: 'Thorn Block', type: 'at-will', range: 'n/a', attack_roll: 'n/a', attack_vs: 'n/a', damage_roll: 'n/a', ability_notes: 'The wearer of the helmet has a +3 defense against plant attacks.'})
   ]);
 };

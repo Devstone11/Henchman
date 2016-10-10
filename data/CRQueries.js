@@ -198,7 +198,7 @@ module.exports = {
       FROM race_abilities
       LEFT JOIN abilities
       ON abilities.id = race_abilities.ability_id
-      WHERE race_id = 2`);
+      WHERE race_id = ${race_id}`);
   },
   getItems: function(npc_id) {
     return knex.raw(
@@ -218,7 +218,7 @@ module.exports = {
       abilities.damage_roll AS damage_roll,
       abilities.ability_notes AS ability_notes
       from item_abilities
-      JOIN items
+      RIGHT JOIN items
       ON items.id = item_abilities.item_id
       JOIN abilities
       ON abilities.id = item_abilities.ability_id
