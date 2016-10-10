@@ -146,8 +146,14 @@ module.exports = {
   getEncounters: function(campaign_id) {
     return knex('encounters').where({campaign_id: campaign_id}).select('id', 'name', 'active');
   },
+  getOneEncounter: function(encounter_id) {
+    return knex('encounters').where({id: encounter_id});
+  },
   getScenes: function(encounter_id) {
     return knex('scenes').where({encounter_id: encounter_id}).select('id', 'name', 'setting_description', 'misc_loot', 'active');
+  },
+  getOneScene: function(scene_id) {
+    return knex('scenes').where({id: scene_id});
   },
   getObstacles: function(scene_id) {
     return knex('obstacles').where({scene_id: scene_id});

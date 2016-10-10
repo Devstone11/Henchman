@@ -17,9 +17,17 @@ router.get('/campaigns/:id', function(req, res, next) {
 
 router.get('/encounters/:id', function(req, res, next) {
   CRQueries.getScenes(req.params.id).then(function(scenes) {
-    res.send(scenes);
+    CRQueries.getOneEncounter(req.params.id).then(function(encounter) {
+      res.send({scenes: scenes, encounter: encounter[0]});
+    })
   })
 });
+
+router.get('/scenes/:id', function(req, res, next) {
+  CRQueries.getOneScene(req.params.id).then(function(scene) {
+    res.send(scene[0]);
+  })
+})
 
 router.get('/obstacles/:scene_id', function(req, res, next) {
   CRQueries.getObstacles(req.params.scene_id).then(function(obstacles) {
@@ -51,42 +59,29 @@ router.get('/players/:campaign_id', function(req, res, next) {
   })
 })
 
-//THE BELOW ROUTE NOT FUNCTIONAL
-// router.get('/scenes/:id', function(req, res, next) {
-//   var results = {
-//     obstacles: [],
-//     npcs: []
-//   };
-//   CRQueries.getObstacles(req.params.id).then(function(obstacles) {
-//     results.obstacles = obstacles;
-//     CRQueries.getNPCs(req.params.id).then(function(npcs) {
-//
-//       Promise.all(
-//         npcs.rows.map(function(npc) {
-//           var npcObj = {};
-//           npcObj.stats = npc;
-//           npcObj.race_abilities = [];
-//           npcObj.items = [];
-//           return CRQueries.getRaceAbilities(npc.race_id).then(function(race_abilities) {
-//             race_abilities.rows.forEach(function(race_ability) {
-//               npcObj.race_abilities.push(race_ability);
-//             })
-//             CRQueries.getItems(npc.npc_id).then(function(items) {
-//               items.rows.forEach(function(item) {
-//                 npcObj.items.push(item);
-//               })
-//               return npcObj;
-//             })
-//           })
-//         })
-//       ).then(function(npcObjs) {
-//         npcObjs.forEach(function(npcObj) {
-//           results.npcs.push(npcObj);
-//         });
-//         res.send(results);
-//       })
-//     })
-//   })
-// });
+router.post('/encounters/:id', function(req, res, next) {
+  UDQueries.updateEncounter(req.body, req.params.id).then(function() {
+    res.send({status: 200});
+  })
+})
+
+router.post('/scenes/:id', function(req, res, next) {
+  UDQueries.updateScene(req.body, req.params.id).then(function() {
+    res.send({status: 200});
+  })
+})
+
+router.post('/players/:player_id', function(req, res, next) {
+  UDQueries.updatePlayer(req.body, req.params.player_id).then(function() {
+    res.send({status: 200});
+  })
+})
+
+router.post('/npcs/:npc_id', function(req, res, next) {
+  console.log(req.body);
+  UDQueries.updateNPC(req.body, req.params.npc_id).then(function() {
+    res.send({status: 200});
+  })
+})
 
 module.exports = router;
