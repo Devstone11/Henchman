@@ -11,7 +11,9 @@ router.use(cors());
 /* GET home page. */
 router.get('/campaigns/:id', function(req, res, next) {
   CRQueries.getEncounters(req.params.id).then(function(encounters) {
-    res.send(encounters);
+    CRQueries.getOneCampaign(req.params.id).then(function(campaign) {
+      res.send({encounters: encounters, campaign: campaign[0]});
+    })
   })
 });
 
@@ -41,6 +43,12 @@ router.get('/npcs/:scene_id', function(req, res, next) {
   })
 });
 
+router.get('/races/', function(req, res, next) {
+  CRQueries.getRaces().then(function(races) {
+    res.send(races);
+  })
+});
+
 router.get('/race_abilities/:race_id', function(req, res, next) {
   CRQueries.getRaceAbilities(req.params.race_id).then(function(race_abilities) {
     res.send(race_abilities);
@@ -56,6 +64,14 @@ router.get('/items/:npc_id', function(req, res, next) {
 router.get('/players/:campaign_id', function(req, res, next) {
   CRQueries.getPlayers(req.params.campaign_id).then(function(players) {
     res.send(players);
+  })
+})
+
+//UPDATE ROUTES
+
+router.post('/campaigns/:id', function(req, res, next) {
+  UDQueries.updateCampaign(req.body, req.params.id).then(function() {
+    res.send({status: 200});
   })
 })
 
@@ -78,10 +94,45 @@ router.post('/players/:player_id', function(req, res, next) {
 })
 
 router.post('/npcs/:npc_id', function(req, res, next) {
-  console.log(req.body);
   UDQueries.updateNPC(req.body, req.params.npc_id).then(function() {
     res.send({status: 200});
   })
 })
+
+//CREATE ROUTES
+
+//******HARD-CODED USER ID HERE!!!
+router.post('/campaigns/', function(req, res, next) {
+  CRQueries.createCampaign('1', req.body.name).then(function() {
+    res.send({status: 200});
+  })
+});
+
+router.post('/encounters/new/:campaign_id', function(req, res, next) {
+  CRQueries.createEncounter(req.params.campaign_id, req.body.name).then(function() {
+    res.send({status: 200});
+  })
+});
+
+router.post('/scenes/new/:encounter_id', function(req, res, next) {
+  CRQueries.createScene(req.params.encounter_id, req.body).then(function() {
+    res.send({status: 200});
+  })
+});
+
+router.post('/npcs/new/:scene_id', function(req, res, next) {
+  CRQueries.getOneRace(req.body.race_id).then(function(race) {
+    CRQueries.createNonPlayerCharacter(req.params.scene_id, req.body, race[0].max_hit_points).then(function() {
+      res.send({status: 200});
+    })
+  })
+});
+
+router.post('/obstacles/new/:scene_id', function(req, res, next) {
+  CRQueries.createObstacle(req.params.scene_id, req.body).then(function() {
+    console.log('obstacle successfully created!');
+    res.send({status: 200});
+  })
+});
 
 module.exports = router;

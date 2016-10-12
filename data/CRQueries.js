@@ -4,13 +4,11 @@ module.exports = {
   //'CREATE' Queries
   createUser: function(email) {
     return knex('users').insert({
-      id: DEFAULT,
       email: email
     })
   },
   createCampaign: function(user_id, name) {
     return knex('campaigns').insert({
-      id: DEFAULT,
       user_id: user_id,
       name: name,
       active: true
@@ -18,7 +16,6 @@ module.exports = {
   },
   createEncounter: function(campaign_id, name) {
     return knex('encounters').insert({
-      id: DEFAULT,
       campaign_id: campaign_id,
       name: name,
       active: true
@@ -26,7 +23,6 @@ module.exports = {
   },
   createPlayerCharacter: function(campaign_id, name, level, pcClass, race, speed, xp, ac, fort, ref, will, passive_insight, passive_perception, max_hp) {
     return knex('player_characters').insert({
-      id: DEFAULT,
       campaign_id: campaign_id,
       name: name,
       level: level,
@@ -47,13 +43,12 @@ module.exports = {
       active: true
     })
   },
-  createScene: function(encounter_id, name, setting_desc, loot) {
+  createScene: function(encounter_id, scene) {
     return knex('scenes').insert({
-      id: DEFAULT,
       encounter_id: encounter_id,
-      name: name,
-      setting_description: setting_desc,
-      misc_loot: loot,
+      name: scene.name,
+      setting_description: scene.setting_description,
+      misc_loot: scene.misc_loot,
       active: true
     })
   },
@@ -90,18 +85,16 @@ module.exports = {
       ability_id: ability_id
     })
   },
-  createNonPlayerCharacter: function(scene_id, race_id, name, initiative, npc_notes, current_effects, loot) {
-    var max_hit_points = knex('races').where({id: race_id}).select('max_hit_points');
+  createNonPlayerCharacter: function(scene_id, npc, max_hp) {
     return knex('non_player_characters').insert({
-      id: DEFAULT,
       scene_id: scene_id,
-      race_id: race_id,
-      name: name,
-      current_hit_points: max_hit_points,
-      initiative: initiative,
-      npc_notes: npc_notes,
-      current_effects: current_effects,
-      loot: loot,
+      race_id: npc.race_id,
+      name: npc.npc_name,
+      current_hit_points: max_hp,
+      initiative: npc.initiative,
+      npc_notes: npc.npc_notes,
+      current_effects: npc.current_effects,
+      loot: npc.loot,
       active: true
     })
   },
@@ -122,16 +115,15 @@ module.exports = {
       ability_id: ability_id
     })
   },
-  createObstacle: function(scene_id, name, perception_check, attack_roll, attack_vs, damage_roll, obstacle_notes) {
+  createObstacle: function(scene_id, obstacle) {
     return knex('obstacles').insert({
-      id: DEFAULT,
       scene_id: scene_id,
-      name: name,
-      perception_check: perception_check,
-      attack_roll: attack_roll,
-      attack_vs: attack_vs,
-      damage_roll: damage_roll,
-      obstacle_notes,
+      name: obstacle.name,
+      perception_check: obstacle.perception_check,
+      attack_roll: obstacle.attack_roll,
+      attack_vs: obstacle.attack_vs,
+      damage_roll: obstacle.damage_roll,
+      obstacle_notes: obstacle.obstacle_notes,
       active: true
     })
   },
@@ -142,6 +134,9 @@ module.exports = {
   },
   getCampaigns: function(user_id) {
     return knex('campaigns').where({user_id: user_id}).select('id', 'name', 'active');
+  },
+  getOneCampaign: function(campaign_id) {
+    return knex('campaigns').where({id: campaign_id});
   },
   getEncounters: function(campaign_id) {
     return knex('encounters').where({campaign_id: campaign_id}).select('id', 'name', 'active');
@@ -157,6 +152,12 @@ module.exports = {
   },
   getObstacles: function(scene_id) {
     return knex('obstacles').where({scene_id: scene_id});
+  },
+  getRaces: function() {
+    return knex('races');
+  },
+  getOneRace: function(race_id) {
+    return knex('races').where({id: race_id});
   },
   getPlayers: function(campaign_id) {
     return knex('player_characters').where({campaign_id: campaign_id, active: true});
