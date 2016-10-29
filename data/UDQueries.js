@@ -56,5 +56,55 @@ module.exports = {
       loot: npc.loot,
       active: npc.npc_active
     });
+  },
+  deleteCampaign: function(camp_id) {
+    return knex('campaigns').where('id', camp_id).del();
+  },
+  deleteCampaignPCs: function(camp_id) {
+    return knex('player_characters').where('campaign_id', camp_id).del();
+  },
+  deleteCampaignEncounters: function(camp_id) {
+    return knex('encounters').where('campaign_id', camp_id).del();
+  },
+  deleteCampaignScenes: function(camp_id) {
+    return knex.raw(
+      `DELETE FROM scenes
+      WHERE encounter_id IN (
+        SELECT encounters.id
+        FROM encounters
+        WHERE encounters.campaign_id = ${camp_id}
+      )`
+    )
+  },
+  deleteCampaignObstacles: function(camp_id) {
+    return knex.raw(
+      `DELETE FROM obstacles
+      WHERE scene_id IN (
+        SELECT scenes.id
+        FROM scenes
+        JOIN encounters ON scenes.encounter_id = encounters.id
+        WHERE encounters.campaign_id = ${camp_id}
+      )`
+    )
+  },
+  deleteCampaignNPCs: function(camp_id) {
+    return knex.raw(
+      `DELETE FROM non_player_characters
+      WHERE scene_id IN (
+        SELECT scenes.id
+        FROM scenes
+        JOIN encounters ON scenes.encounter_id = encounters.id
+        WHERE encounters.campaign_id = ${camp_id}
+      )`
+    )
+  },
+  deleteEncounterScenes: function(encounter_id) {
+    return knex('scenes').where('encounter_id', encounter_id).del();
+  },
+  deleteSceneNPCs: function(scene_id) {
+    return knex('non_player_characters').where('scene_id', scene_id).del();
+  },
+  deleteSceneObstacles: function(scene_id) {
+    return knex('obstacles').where('scene_id', scene_id).del();
   }
 }

@@ -132,17 +132,20 @@ module.exports = {
   getUsers: function() {
     return knex.select('id', 'email').from('users');
   },
+  getOneUser: function(facebook_id) {
+    return knex('users').where({facebook_id: facebook_id}).select('id').first();
+  },
   getCampaigns: function(user_id) {
     return knex('campaigns').where({user_id: user_id}).select('id', 'name', 'active');
   },
   getOneCampaign: function(campaign_id) {
-    return knex('campaigns').where({id: campaign_id});
+    return knex('campaigns').where({id: campaign_id}).first();
   },
   getEncounters: function(campaign_id) {
     return knex('encounters').where({campaign_id: campaign_id}).select('id', 'name', 'active');
   },
   getOneEncounter: function(encounter_id) {
-    return knex('encounters').where({id: encounter_id});
+    return knex('encounters').where({id: encounter_id}).first();
   },
   getScenes: function(encounter_id) {
     return knex('scenes').where({encounter_id: encounter_id}).select('id', 'name', 'setting_description', 'misc_loot', 'active');

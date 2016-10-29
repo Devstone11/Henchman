@@ -8,11 +8,11 @@ var cors = require('cors');
 
 router.use(cors());
 
-/* GET home page. */
+//READ ROUTES
 router.get('/campaigns/:id', function(req, res, next) {
   CRQueries.getEncounters(req.params.id).then(function(encounters) {
     CRQueries.getOneCampaign(req.params.id).then(function(campaign) {
-      res.send({encounters: encounters, campaign: campaign[0]});
+      res.send({encounters: encounters, campaign: campaign});
     })
   })
 });
@@ -20,7 +20,7 @@ router.get('/campaigns/:id', function(req, res, next) {
 router.get('/encounters/:id', function(req, res, next) {
   CRQueries.getScenes(req.params.id).then(function(scenes) {
     CRQueries.getOneEncounter(req.params.id).then(function(encounter) {
-      res.send({scenes: scenes, encounter: encounter[0]});
+      res.send({scenes: scenes, encounter: encounter});
     })
   })
 });
@@ -132,6 +132,31 @@ router.post('/obstacles/new/:scene_id', function(req, res, next) {
   CRQueries.createObstacle(req.params.scene_id, req.body).then(function() {
     console.log('obstacle successfully created!');
     res.send({status: 200});
+  })
+});
+
+//DESTROY ROUTES
+
+router.post('/campaigns/delete/:camp_id', function(req, res, next) {
+  CRQueries.getOneUser(req.body.userId).then(function(user) {
+    CRQueries.getOneCampaign(req.params.camp_id).then(function(campaign) {
+      if (user.id === campaign.user_id) {
+        process.setMaxListeners(0);
+        Promise.all([
+          UDQueries.deleteCampaignPCs(req.params.camp_id),
+          UDQueries.deleteCampaignObstacles(req.params.camp_id),
+          UDQueries.deleteCampaignNPCs(req.params.camp_id),
+          UDQueries.deleteCampaignScenes(req.params.camp_id),
+          UDQueries.deleteCampaignEncounters(req.params.camp_id),
+          UDQueries.deleteCampaign(req.params.camp_id)
+        ]).then(function() {
+          console.log("all stuff was deleted");
+          res.send({status: 200});
+        });
+      } else {
+        res.send({status: 500, message: "incorrect user permissions"});
+      }
+    })
   })
 });
 

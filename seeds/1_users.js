@@ -1,8 +1,8 @@
 
 exports.seed = function(knex, Promise) {
   return Promise.all([
-    knex('users').insert({email: 'fake@fake.fake'}),
-    knex('users').insert({email: 'fake2@fake.fake'})    
+    knex('users').insert({email: 'fake@fake.fake', facebook_id: 12345}),
+    knex('users').insert({email: 'fake2@fake.fake', facebook_id: 4462272956288})
   ]);
   // // Deletes ALL existing entries
   // return knex('table_name').del()

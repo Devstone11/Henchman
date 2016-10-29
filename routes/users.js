@@ -15,8 +15,10 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/:id', function(req, res, next) {
-  Users.getCampaigns(req.params.id).then(function(campaigns) {
-    res.send(campaigns);
+  Users.getOneUser(req.query.userId).then(function(user) {
+    Users.getCampaigns(user.id).then(function(campaigns) {
+      res.send(campaigns);
+    })
   })
 });
 
