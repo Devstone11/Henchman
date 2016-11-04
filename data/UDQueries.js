@@ -98,8 +98,31 @@ module.exports = {
       )`
     )
   },
+  deleteEncounter: function(encounter_id) {
+    return knex('encounters').where('id', encounter_id).del();
+  },
   deleteEncounterScenes: function(encounter_id) {
     return knex('scenes').where('encounter_id', encounter_id).del();
+  },
+  deleteEncounterNPCs: function(encounter_id) {
+    return knex.raw(
+      `DELETE FROM non_player_characters
+      WHERE scene_id IN (
+        SELECT scenes.id
+        FROM scenes
+        WHERE scenes.encounter_id = ${encounter_id}
+      )`
+    )
+  },
+  deleteEncounterObstacles: function(encounter_id) {
+    return knex.raw(
+      `DELETE FROM obstacles
+      WHERE scene_id IN (
+        SELECT scenes.id
+        FROM scenes
+        WHERE scenes.encounter_id = ${encounter_id}
+      )`
+    )
   },
   deleteSceneNPCs: function(scene_id) {
     return knex('non_player_characters').where('scene_id', scene_id).del();

@@ -102,9 +102,11 @@ router.post('/npcs/:npc_id', function(req, res, next) {
 //CREATE ROUTES
 
 //******HARD-CODED USER ID HERE!!!
-router.post('/campaigns/', function(req, res, next) {
-  CRQueries.createCampaign('1', req.body.name).then(function() {
-    res.send({status: 200});
+router.post('/campaigns/new/:user_id', function(req, res, next) {
+  CRQueries.getOneUser(req.body.userId).then(function(user) {
+    CRQueries.createCampaign(user.id, req.body.name).then(function() {
+      res.send({status: 200});
+    })
   })
 });
 
@@ -150,7 +152,6 @@ router.post('/campaigns/delete/:camp_id', function(req, res, next) {
           UDQueries.deleteCampaignEncounters(req.params.camp_id),
           UDQueries.deleteCampaign(req.params.camp_id)
         ]).then(function() {
-          console.log("all stuff was deleted");
           res.send({status: 200});
         });
       } else {
@@ -159,5 +160,31 @@ router.post('/campaigns/delete/:camp_id', function(req, res, next) {
     })
   })
 });
+
+router.post('/encounters/delete/:encounter_id', function(req, res, next) {
+  CRQueries.getOneUser(req.body.userId).then(function(user) {
+    CRQueries.getOneEncounter(req.params.encounter_id).then(function(encounter) {
+      CRQueries.getOneCampaign(encounter.campaign_id).then(function(campaign) {
+        if (user.id === campaign.user_id) {
+          process.setMaxListeners(0);
+          Promise.all([
+            UDQueries.deleteEncounterNPCs(req.params.encounter_id),
+            UDQueries.deleteEncounterObstacles(req.params.encounter_id),
+            UDQueries.deleteEncounterScenes(req.params.encounter_id),
+            UDQueries.deleteEncounter(req.params.encounter_id)
+          ]).then(function() {
+            res.send({status: 200});
+          });
+        } else {
+          res.send({status: 500, message: "incorrect user permissions"});
+        }
+      })
+    })
+  })
+  //Delete encounter NPCs
+  //Delete encounter obstacles
+  //Delete encounter scenes
+  //delete encounter
+})
 
 module.exports = router;
