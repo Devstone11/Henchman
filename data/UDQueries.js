@@ -132,5 +132,11 @@ module.exports = {
   },
   deleteScene: function(scene_id) {
     return knex('scenes').where('id', scene_id).del();
+  },
+  deleteNpc: function(npc_id) {
+    return knex('non_player_characters').where('id', npc_id).del();
+  },
+  deleteObstacle: function(obstacle_id) {
+    return knex('obstacles').where('id', obstacle_id).del();
   }
 }

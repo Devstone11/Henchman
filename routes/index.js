@@ -202,4 +202,19 @@ router.post('/scenes/delete/:scene_id', function(req, res, next) {
   })
 })
 
+router.post('/NPCs/delete/:npc_id', function(req, res, next) {
+  CRQueries.getOneUser(req.body.userId).then(function(user) {
+    CRQueries.getNpcCampaign(req.params.npc_id).then(function(campaign) {
+      console.log(campaign.rows);
+      if (user[0].id === campaign.rows[0].user_id) {
+        UDQueries.deleteNpc(req.params.npc_id).then(function() {
+          res.send({status: 200});
+        });
+      } else {
+        res.send({status: 403});
+      }
+    })
+  })
+})
+
 module.exports = router;

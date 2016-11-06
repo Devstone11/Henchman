@@ -149,6 +149,15 @@ module.exports = {
       WHERE scenes.id = ${scene_id}
     `);
   },
+  getNpcCampaign: function(npc_id) {
+    return knex.raw(`
+      SELECT * from campaigns
+      JOIN encounters ON encounters.campaign_id = campaigns.id
+      JOIN scenes ON scenes.encounter_id = encounters.id
+      JOIN non_player_characters ON non_player_characters.scene_id = scenes.id
+      WHERE non_player_characters.id = ${npc_id}
+    `)
+  },
   getEncounters: function(campaign_id) {
     return knex('encounters').where({campaign_id: campaign_id}).select('id', 'name', 'active');
   },
