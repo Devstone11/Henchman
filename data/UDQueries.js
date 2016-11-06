@@ -129,5 +129,8 @@ module.exports = {
   },
   deleteSceneObstacles: function(scene_id) {
     return knex('obstacles').where('scene_id', scene_id).del();
+  },
+  deleteScene: function(scene_id) {
+    return knex('scenes').where('id', scene_id).del();
   }
 }

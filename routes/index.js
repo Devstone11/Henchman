@@ -181,10 +181,25 @@ router.post('/encounters/delete/:encounter_id', function(req, res, next) {
       })
     })
   })
-  //Delete encounter NPCs
-  //Delete encounter obstacles
-  //Delete encounter scenes
-  //delete encounter
+})
+
+router.post('/scenes/delete/:scene_id', function(req, res, next) {
+  CRQueries.getOneUser(req.body.userId).then(function(user) {
+    CRQueries.getSceneCampaign(req.params.scene_id).then(function(campaign) {
+      if (user.id === campaign.rows[0].user_id) {
+        process.setMaxListeners(0);
+        Promise.all([
+          UDQueries.deleteSceneNPCs(req.params.scene_id),
+          UDQueries.deleteSceneObstacles(req.params.scene_id),
+          UDQueries.deleteScene(req.params.scene_id)
+        ]).then(function() {
+          res.send({status: 200});
+        });
+      } else {
+        res.send({status: 403});
+      }
+    })
+  })
 })
 
 module.exports = router;

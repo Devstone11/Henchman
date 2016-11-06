@@ -141,6 +141,14 @@ module.exports = {
   getOneCampaign: function(campaign_id) {
     return knex('campaigns').where({id: campaign_id}).first();
   },
+  getSceneCampaign: function(scene_id) {
+    return knex.raw(`
+      SELECT * from campaigns
+      JOIN encounters ON encounters.campaign_id = campaigns.id
+      JOIN scenes ON scenes.encounter_id = encounters.id
+      WHERE scenes.id = ${scene_id}
+    `);
+  },
   getEncounters: function(campaign_id) {
     return knex('encounters').where({campaign_id: campaign_id}).select('id', 'name', 'active');
   },
