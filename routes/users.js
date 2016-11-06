@@ -16,9 +16,15 @@ router.get('/', function(req, res, next) {
 
 router.get('/:id', function(req, res, next) {
   Users.getOneUser(req.query.userId).then(function(user) {
-    Users.getCampaigns(user.id).then(function(campaigns) {
-      res.send(campaigns);
-    })
+    if (user.length > 0) {
+      Users.getCampaigns(user[0].id).then(function(campaigns) {
+        res.send(campaigns);
+      })
+    } else {
+      Users.createUser(req.query.userId).then(function() {
+        res.send([]);
+      })
+    }
   })
 });
 

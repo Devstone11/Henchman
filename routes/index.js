@@ -104,7 +104,7 @@ router.post('/npcs/:npc_id', function(req, res, next) {
 //******HARD-CODED USER ID HERE!!!
 router.post('/campaigns/new/:user_id', function(req, res, next) {
   CRQueries.getOneUser(req.body.userId).then(function(user) {
-    CRQueries.createCampaign(user.id, req.body.name).then(function() {
+    CRQueries.createCampaign(user[0].id, req.body.name).then(function() {
       res.send({status: 200});
     })
   })
@@ -142,7 +142,7 @@ router.post('/obstacles/new/:scene_id', function(req, res, next) {
 router.post('/campaigns/delete/:camp_id', function(req, res, next) {
   CRQueries.getOneUser(req.body.userId).then(function(user) {
     CRQueries.getOneCampaign(req.params.camp_id).then(function(campaign) {
-      if (user.id === campaign.user_id) {
+      if (user[0].id === campaign.user_id) {
         process.setMaxListeners(0);
         Promise.all([
           UDQueries.deleteCampaignPCs(req.params.camp_id),
@@ -165,7 +165,7 @@ router.post('/encounters/delete/:encounter_id', function(req, res, next) {
   CRQueries.getOneUser(req.body.userId).then(function(user) {
     CRQueries.getOneEncounter(req.params.encounter_id).then(function(encounter) {
       CRQueries.getOneCampaign(encounter.campaign_id).then(function(campaign) {
-        if (user.id === campaign.user_id) {
+        if (user[0].id === campaign.user_id) {
           process.setMaxListeners(0);
           Promise.all([
             UDQueries.deleteEncounterNPCs(req.params.encounter_id),
@@ -186,7 +186,7 @@ router.post('/encounters/delete/:encounter_id', function(req, res, next) {
 router.post('/scenes/delete/:scene_id', function(req, res, next) {
   CRQueries.getOneUser(req.body.userId).then(function(user) {
     CRQueries.getSceneCampaign(req.params.scene_id).then(function(campaign) {
-      if (user.id === campaign.rows[0].user_id) {
+      if (user[0].id === campaign.rows[0].user_id) {
         process.setMaxListeners(0);
         Promise.all([
           UDQueries.deleteSceneNPCs(req.params.scene_id),

@@ -2,9 +2,9 @@ var knex = require('../db/knex');
 
 module.exports = {
   //'CREATE' Queries
-  createUser: function(email) {
+  createUser: function(facebook_id) {
     return knex('users').insert({
-      email: email
+      facebook_id: facebook_id
     })
   },
   createCampaign: function(user_id, name) {
@@ -133,7 +133,7 @@ module.exports = {
     return knex.select('id', 'email').from('users');
   },
   getOneUser: function(facebook_id) {
-    return knex('users').where({facebook_id: facebook_id}).select('id').first();
+    return knex('users').where({facebook_id: facebook_id}).select('id');
   },
   getCampaigns: function(user_id) {
     return knex('campaigns').where({user_id: user_id}).select('id', 'name', 'active');
