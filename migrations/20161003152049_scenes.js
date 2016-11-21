@@ -4,8 +4,8 @@ exports.up = function(knex, Promise) {
     table.increments('id');
     table.integer('encounter_id');
     table.string('name');
-    table.string('setting_description');
-    table.string('misc_loot');
+    table.string('setting_description', 2000);
+    table.string('misc_loot', 2000);
     table.bool('active');
     table.timestamps();
   })

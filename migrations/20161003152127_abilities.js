@@ -8,7 +8,7 @@ exports.up = function(knex, Promise) {
     table.string('attack_roll');
     table.string('attack_vs');
     table.string('damage_roll');
-    table.string('ability_notes');
+    table.string('ability_notes', 2000);
     table.timestamps();
   })
 };

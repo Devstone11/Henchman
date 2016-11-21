@@ -7,9 +7,9 @@ exports.up = function(knex, Promise) {
     table.string('name');
     table.integer('current_hit_points');
     table.integer('initiative');
-    table.string('npc_notes');
-    table.string('current_effects');
-    table.string('loot');
+    table.string('npc_notes', 2000);
+    table.string('current_effects', 2000);
+    table.string('loot', 2000);
     table.bool('active');
 
     table.timestamps();

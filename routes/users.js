@@ -10,6 +10,7 @@ router.use(cors());
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   Users.getUsers().then(function(users) {
+    console.log(users);
     res.send(users);
   })
 });

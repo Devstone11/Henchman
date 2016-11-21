@@ -18,7 +18,7 @@ exports.up = function(knex, Promise) {
     table.integer('max_hit_points');
     table.integer('current_hit_points');
     table.integer('initiative');
-    table.string('current_effects');
+    table.string('current_effects', 2000);
     table.bool('active');
 
     table.timestamps();

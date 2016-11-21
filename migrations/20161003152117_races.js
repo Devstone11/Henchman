@@ -10,7 +10,7 @@ exports.up = function(knex, Promise) {
     table.integer('reflex');
     table.integer('will');
     table.integer('speed');
-    table.string('race_notes');
+    table.string('race_notes', 2000);
     table.timestamps();
   })
 };

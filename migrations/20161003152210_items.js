@@ -4,7 +4,7 @@ exports.up = function(knex, Promise) {
     table.increments('id');
     table.integer('npc_id');
     table.string('name');
-    table.string('item_notes');
+    table.string('item_notes', 2000);
     table.string('enhancement_amount');
     table.string('enhancement_target');
 
