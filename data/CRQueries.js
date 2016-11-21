@@ -220,6 +220,7 @@ module.exports = {
       abilities.type AS ability_type,
       abilities.range AS ability_range,
       abilities.attack_roll AS attack_roll,
+      abilities.attack_vs AS attack_vs,
       abilities.damage_roll AS damage_roll,
       abilities.ability_notes AS ability_notes
       FROM race_abilities
