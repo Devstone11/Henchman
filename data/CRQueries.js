@@ -228,6 +228,16 @@ module.exports = {
       ON abilities.id = race_abilities.ability_id
       WHERE race_id = ${race_id}`);
   },
+  getCampaignItems: function(camp_id) {
+    return knex.raw(
+      `SELECT * from items
+      JOIN non_player_characters on non_player_characters.id = items.npc_id
+      JOIN scenes on scenes.id = non_player_characters.scene_id
+      JOIN encounters on encounters.id = scenes.encounter_id
+      JOIN campaigns on campaigns.id = encounters.campaign_id
+      WHERE campaigns.id = ${camp_id};`
+    );
+  },
   getItems: function(npc_id) {
     return knex.raw(
       `SELECT

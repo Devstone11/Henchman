@@ -55,6 +55,12 @@ router.get('/race_abilities/:race_id', function(req, res, next) {
   })
 });
 
+router.get('/all_items/:camp_id', function(req, res, next) {
+  CRQueries.getCampaignItems(req.params.camp_id).then(function(items) {
+    res.send(items.rows);
+  })
+})
+
 router.get('/items/:npc_id', function(req, res, next) {
   CRQueries.getItems(req.params.npc_id).then(function(items) {
     res.send(items);
